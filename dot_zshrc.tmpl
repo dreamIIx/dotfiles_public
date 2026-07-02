@@ -1,0 +1,188 @@
+# Import colorscheme from 'wal' asynchronously
+# &   # Run the process in the background.
+# ( ) # Hide shell job control messages.
+# Not supported in the "fish" shell.
+# (cat ~/.cache/wal/sequences &)
+# Alternative (blocks terminal for 0-3ms)
+# cat ~/.cache/wal/sequences
+# To add support for TTYs this line can be optionally added.
+# source ~/.cache/wal/colors-tty.sh
+
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# Created by newuser for 5.9
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+
+if [ ! -d "$ZINIT_HOME" ]; then
+	mkdir -p "$(dirname $ZINIT_HOME)"
+	git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+fi
+
+source "${ZINIT_HOME}/zinit.zsh"
+
+# export NNN_FIFO=/tmp/nnn.fifo
+export NNN_PLUG='f:fzcd;d:diffs;D:disasm;z:ziparound;Z:tararound;h:-spawntermhere;p:-preview-tui;c:-.cbcp;g:-dragdrop;m:nmount;b:!cp -rv "$nnn" "$nnn".bak*;i:!convert "$nnn" png:- | xclip -sel clipboard -t image/png*;l:-!less -iR "$nnn"*;e:-!sudo -e "$nnn"*;r:rsynccp'
+# export NB={{- .chezmoi.homeDir -}}/1/nnn_filepicker_buffer
+export NB=${NNN_SEL:-${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.selection}
+export NNN_BMS="d:~/Downloads/;/:/;m:/mnt;D:~/Documents/;w:/run/media/dreamIIx/Windows/;s:/run/media/dreamIIx/dream11x/;S:/run/media/dreamIIx/Shared_drive/;b:/run/media/dreamIIx/dream11x/books"
+
+[ -n "$NNNLVL" ] && PS1="N$NNNLVL $PS1"
+
+n ()
+{
+    # Block nesting of nnn in subshells
+    [ "${NNNLVL:-0}" -eq 0 ] || {
+        echo "nnn is already running"
+        return
+    }
+
+    # The behaviour is set to cd on quit (nnn checks if NNN_TMPFILE is set)
+    # If NNN_TMPFILE is set to a custom path, it must be exported for nnn to
+    # see. To cd on quit only on ^G, remove the "export" and make sure not to
+    # use a custom path, i.e. set NNN_TMPFILE *exactly* as follows:
+    NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+    # export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+
+    # Unmask ^Q (, ^V etc.) (if required, see `stty -a`) to Quit nnn
+    # stty start undef
+    # stty stop undef
+    # stty lwrap undef
+    # stty lnext undef
+
+    # The command builtin allows one to alias nnn to n, if desired, without
+    # making an infinitely recursive alias
+    NB=${NNN_SEL:-${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.selection}
+    argss=$@
+    VISUAL=nvim command nnn -P preview-tui -a -r -A -e -H -p $NB ${argss}
+
+    [ ! -f "$NNN_TMPFILE" ] || {
+        . "$NNN_TMPFILE"
+        rm -f -- "$NNN_TMPFILE" > /dev/null
+    }
+}
+
+zinit ice depth=1; zinit light romkatv/powerlevel10k
+
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-autosuggestions
+zinit light Aloxaf/fzf-tab
+
+# zinit snippet OMZP::git
+alias ga='git add'
+alias gaa='git add .'
+alias gb='git branch -vv'
+alias gco='git checkout'
+alias gcp='git cherry-pick'
+alias gd='git diff'
+alias gcmt='git commit'
+alias gcmm='git commit -m'
+alias glg='git log'
+alias gl='git pull'
+alias gpr='git pull --rebase'
+alias gp='git push'
+alias gpfwl='git push --force-with-lease'
+alias grb='git rebase'
+alias grs='git restore'
+alias gst='git status'
+alias gf='git fetch'
+
+zinit snippet OMZP::sudo
+
+autoload -Uz compinit && compinit
+
+zinit cdreplay -q
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+bindkey -v
+export KEYTIMEOUT=1
+
+bindkey "\e[1;5D" backward-word  # Ctrl + Left Arrow
+bindkey "\e[1;5C" forward-word   # Ctrl + Right Arrow
+
+# bindkey '^x^e' edit-command-line
+bindkey '^p' history-search-backward
+bindkey '^n' history-search-forward
+
+# bindkey -M menuselect 'h' vi-backward-char
+# bindkey -M menuselect 'k' vi-up-line-or-history
+# bindkey -M menuselect 'l' vi-forward-char
+# bindkey -M menuselect 'j' vi-down-line-or-history
+
+bindkey '^?' backward-delete-char
+bindkey '^u' backward-kill-line
+bindkey '^a' beginning-of-line
+bindkey '^e' end-of-line
+bindkey '^k' kill-line
+bindkey "^[[3~" delete-char
+bindkey "^[[3;5~" delete-word
+
+autoload -z edit-command-line
+zle -N edit-command-line
+bindkey -M vicmd v edit-command-line
+
+# Change cursor shape for different vi modes.
+function zle-keymap-select {
+  if [[ ${KEYMAP} == vicmd ]] ||
+     [[ $1 = 'block' ]]; then
+    echo -ne '\e[1 q'
+  elif [[ ${KEYMAP} == main ]] ||
+       [[ ${KEYMAP} == viins ]] ||
+       [[ ${KEYMAP} = '' ]] ||
+       [[ $1 = 'beam' ]]; then
+    echo -ne '\e[5 q'
+  fi
+}
+zle -N zle-keymap-select
+zle-line-init() {
+    zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
+    echo -ne "\e[5 q"
+}
+zle -N zle-line-init
+echo -ne '\e[5 q' # Use beam shape cursor on startup.
+preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
+
+HISTSIZE=5000
+HISTFILE=~/.zsh_history
+SAVEHIST=$HISTSIZE
+HISTDUP=erase
+setopt appendhistory
+setopt sharehistory
+setopt hist_ignore_space
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt hist_ignore_dups
+setopt hist_find_no_dups
+
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+# zstyle ':completion:*' menu 'select'
+zstyle ':completion:*' menu no
+zstyle ':fzf-tab:complete:z:*' fzf-preview 'eza --color=always --long --git --no-filesize --no-time --no-user $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza --color=always --long --git --no-filesize --no-time --no-user $realpath'
+
+alias ls="eza --show-symlinks --follow-symlinks --hyperlink --color=always --git --no-filesize --no-time --no-user"
+alias lsl="eza --show-symlinks --follow-symlinks --hyperlink --color=always --long --git --no-filesize --no-time --no-user"
+alias cd="z"
+alias zz="z -"
+alias cat="bat"
+# alias n="VISUAL=nvim nnn -P preview-tui -a -r -A -e -H"
+alias nnn="VISUAL=nvim command nnn -P preview-tui -a -r -A -e -H -p \$NB \$@"
+alias vim="nvim"
+alias nb="< \"\$NB\" | xargs echo | sed 's/ \//\n\//g' | awk '{print \"\\\"\"\$all\"\\\"\"}' |"
+alias nbx="< \"\$NB\" | xargs echo | sed 's/ \//\n\//g' | awk '{print \"\\\"\"\$all\"\\\"\"}' | xargs"
+alias tx='tmux'
+alias emacs='emacsclient -c -a "nvim" '
+alias lg='lazygit'
+alias czm='chezmoi'
+
+eval "$(fzf --zsh)"
+eval "$(zoxide init zsh)"
+eval $(thefuck --alias fk)

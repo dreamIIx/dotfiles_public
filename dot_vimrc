@@ -1,0 +1,47 @@
+set number relativenumber
+syntax on
+set cursorline
+set showmode
+set shiftwidth=4
+set tabstop=4
+set noexpandtab
+set listchars=eol:$,tab:._,trail:~,extends:>,precedes:<
+set showmatch
+set hlsearch
+set history=250
+" set lazyredraw
+set wrap
+
+" use indentation of previous line
+set autoindent
+" use intelligent indentation for C
+set smartindent
+
+nmap cp :let @" = expand("%:p")<CR>
+
+" autocmd BufEnter * colorscheme tokyonight
+" autocmd BufEnter *.cpp colorscheme vscode
+" autocmd BufEnter *.c colorscheme vscode
+" autocmd BufEnter *.hpp colorscheme vscode
+" autocmd ufEnter *.h colorscheme vscode
+" autocmd BufEnter *.tpp colorscheme vscode
+" autocmd BufEnter *.ipp colorscheme vscode
+" autocmd BufEnter *.cs colorscheme vscode
+" autocmd BufEnter *.java colorscheme gruvbox
+
+" nnoremap <leader>d "_d
+" xnoremap <leader>x "_d
+" xnoremap <leader>p "_dP
+" xnoremap <leader>i "0p
+" nnoremap d "0d
+" nnoremap x "_x
+" vnoremap d "0d
+
+let g:VM_maps = {}
+" let g:VM_maps['Find Under']         = '<C-d>'           " replace C-n
+" let g:VM_maps['Find Subword Under'] = '<C-d>'           " replace visual C-n
+" let g:VM_maps["Select l"]           = '<S-Right>'       " start selecting left
+" let g:VM_maps["Select h"]           = '<S-Left>'        " start selecting right
+let g:VM_maps["Add Cursor Down"]    = '<C-Down>'      " start selecting down
+let g:VM_maps["Add Cursor Up"]      = '<C-Up>'        " start selecting up
+let g:VM_mouse_mappings = 1

@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: for range
+# key: fora
+# uuid: fora
+# --
+for (auto& ${1:elem} : ${2:container})
+{
+    $3
+}

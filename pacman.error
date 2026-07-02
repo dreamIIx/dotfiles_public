@@ -1,0 +1,30 @@
+warning: base-3-3 is up to date -- skipping
+warning: bspwm-0.9.12-1 is up to date -- skipping
+warning: chezmoi-2.69.4-1 is up to date -- skipping
+warning: efibootmgr-18-3 is up to date -- skipping
+warning: git-2.53.0-1 is up to date -- skipping
+warning: github-cli-2.87.3-1 is up to date -- skipping
+warning: grub-2:2.14-1 is up to date -- skipping
+warning: linux-6.19.6.arch1-1 is up to date -- skipping
+warning: linux-firmware-20260221-1 is up to date -- skipping
+warning: man-db-2.13.1-1 is up to date -- skipping
+warning: networkmanager-1.56.0-1 is up to date -- skipping
+error: target not found: pandoc-bin
+warning: pipewire-audio-1:1.6.0-2 is up to date -- skipping
+warning: pipewire-pulse-1:1.6.0-2 is up to date -- skipping
+error: target not found: rofi-greenclip
+warning: sudo-1.9.17.p2-2 is up to date -- skipping
+warning: sxhkd-0.6.3-1 is up to date -- skipping
+error: target not found: ttf-courier-prime
+warning: vim-9.2.0081-1 is up to date -- skipping
+error: target not found: visual-studio-code-bin
+warning: vivaldi-7.8.3925.76-1 is up to date -- skipping
+warning: vivaldi-ffmpeg-codecs-144.0.7559.175-1 is up to date -- skipping
+warning: wireplumber-0.5.13-1 is up to date -- skipping
+warning: xclip-0.13-6 is up to date -- skipping
+warning: xorg-server-21.1.21-1 is up to date -- skipping
+warning: xorg-xhost-1.0.10-1 is up to date -- skipping
+warning: xorg-xinit-1.4.4-1 is up to date -- skipping
+warning: xorg-xinput-1.6.4-2 is up to date -- skipping
+warning: xorg-xrandr-1.5.3-1 is up to date -- skipping
+warning: xterm-407-1 is up to date -- skipping

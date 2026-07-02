@@ -1,0 +1,16 @@
+# Default PATHs
+export PATH=~/.config/emacs/bin:~/1/mpv_dx:/bin:/usr/bin:/usr/local/bin:${PATH}
+export TSOCKS_CONF_FILE=~/.config/tsocks/tsocks.conf
+export HISTCONTROL=ignoreboth:erasedups
+export EDITOR=nvim
+export VISUAL=nvim
+# export VISUAL='emacsclient -c -a "emacs -Q" %F'
+
+export TERM=xterm-kitty
+export COLORTERM=truecolor
+export TERMINFO=/usr/lib/kitty/terminfo
+
+if [[ ! -v EMACS_KEES ]]; then
+    emacs --daemon
+    export EMACS_KEES=1
+fi

@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: struct ... { ... }
+# key: struct
+# uuid: struct
+# --
+struct ${1:name}
+{
+public:
+    $0
+};

@@ -1,0 +1,13 @@
+#!/bin/zsh
+
+i=608
+for user in $(<$1)
+do
+	yt-dlp -x --proxy http://127.0.0.1:1080 -N 10 -f bestaudio -f ba --extract-audio --add-metadata --embed-thumbnail --convert-thumbnail jpg --exec-before-download "ffmpeg -i %(thumbnails.-1.filepath)q -vf \"scale=min(iw\,3000):min(ih\,3000):force_original_aspect_ratio=decrease\" _%(thumbnails.-1.filepath)q" --exec-before-download "rm %(thumbnails.-1.filepath)q" --exec-before-download "mv _%(thumbnails.-1.filepath)q %(thumbnails.-1.filepath)q" --output "%(album)s/%(playlist_index)02d. %(title)s.%(ext)s" --ppa "Metadata:-metadata Track=$i" -o "%(title)s-%(artist)s.%(ext)s"  $user
+	((i++))
+	# yt-dlp URL -x -f ba --embed-metadata --embed-thumbnail --convert-thumbnail jpg --exec-before-download "ffmpeg -i %(thumbnails.-1.filepath)q -vf scale=1000:1000 _%(thumbnails.-1.filepath)q" --exec-before-download "rm %(thumbnails.-1.filepath)q" --exec-before-download "mv _%(thumbnails.-1.filepath)q %(thumbnails.-1.filepath)q" --output "%(album)s/%(playlist_index)02d. %(title)s.%(ext)s"
+	# --ppa "ThumbnailsConvertor+FFmpeg_o:-c:v mjpeg -qmin 1 -qscale:v 1 -vf scale=1000:1000:force_original_aspect_ratio=decrease,crop=1000:1000" 
+	# --ppa "EmbedThumbnail+ffmpeg_o:-c:v mjpeg -vf scale=1000:1000 crop=\"'if(gt(ih,iw),iw,ih)':'if(gt(iw,ih),ih,iw)'\""
+	# --audio-format flac
+done
+

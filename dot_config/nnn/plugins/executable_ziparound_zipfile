@@ -1,0 +1,2 @@
+#!/bin/zsh
+zip -q -j "$1.zip" "$1" >/dev/null 2>&1

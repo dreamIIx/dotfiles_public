@@ -1,0 +1,6 @@
+[diff]
+    pager = "delta"
+    # pager = "diff-so-fancy"
+[merge]
+    command = "nvim"
+    args = ["-d", "{{ .Destination }}", "{{ .Source }}", "{{ .Target }}"]

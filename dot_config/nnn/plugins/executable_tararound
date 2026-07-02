@@ -1,0 +1,85 @@
+#!/usr/bin/zsh
+
+selection=${NNN_SEL:-${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.selection}
+
+if [[ -s "$selection" ]]; then
+    arr=("${(@f)$(< $selection | tr '\0' '\n')}")
+    to_compress=()
+    echo "$arr"
+    if [[ ! -z $arr ]] then
+        for i in $arr; do
+            ext2=$i:A:t:e
+            head=$i:A:h
+            full_name=$i:A:t
+            name_ext1=$i:A:t:r
+            ext1=$name_ext1:e
+            name=$name_ext1:r
+            # echo "head=$head"
+            # echo "full_name=$full_name"
+            # echo "name_ext1=$name_ext1"
+            # echo "name=$name"
+            # echo "ext1=$ext1"
+            # echo "ext2=$ext2"
+            if [[ "$ext1" == "tar" ]] then
+                if mkdir "$head/$name.unready" >/dev/null 2>&1; then
+                    # sudo_before="0"
+                    # # read -q "answer?Kill $p? (N/y)"
+                    # # [[ "${answer}" == 'n' ]] && continue
+                    # read -q "answer?Need sudo? (y/N): "
+                    # echo "$answer"
+                    # case $answer in
+                    #     [Yy]* ) echo "1"; sudo_before="1"; break;;
+                    #     [Nn]* ) echo "2"; break;;
+                    #     * ) echo "3"; break;;
+                    # esac
+                    # if [[ $sudo_before == "1" ]];
+                    # then
+                        # SUDO_SOMEHOW ~/.config/nnn/plugins/tararound_untar $full_name $head $name &
+                    # else
+                    ~/.config/nnn/plugins/tararound_untar $full_name $head $name &
+                    # fi
+                fi
+                # echo "extract"
+            else
+                echo "$i"
+                to_compress+=($i)
+                # echo "compess"
+            fi
+        done
+        # echo "==${arr[1]:t:r:r}.tar.lzma"
+        echo "length=${#to_compress[@]}"
+        if ((${#to_compress[@]} != 0)) then
+            common_path=${arr[1]}
+            # echo "$common_path"
+            for i in $to_compress; do
+                cur_n=0
+                while [[ "${common_path:$cur_n:1}" == "${i:$cur_n:1}" && $cur_n -le ${#i} ]]; do
+                    ((cur_n++))
+                    # echo "${common_path:$cur_n:1}"
+                    # echo "${i:$cur_n:1}"
+                    # sleep 0.5s
+                done
+                common_path=${common_path:0:$cur_n}
+                # echo "$common_path"
+                # sleep 1s
+            done
+            echo "$common_path"
+            if [[ ! -d $common_path ]] then
+                common_path="${common_path:h}/"
+                echo "$common_path"
+            fi
+            echo "Enter name: "
+            read -r tarname
+            if [[ $tarname != *".tar."* ]]; then
+                    echo "here"
+                    tarname="$tarname.tar.lzma"
+            fi
+            tar -C "$common_path" -caf $tarname ${to_compress/$common_path/} >/dev/null 2>&1 &
+        fi
+    fi
+fi
+
+# Clear selection
+if [ -p "$NNN_PIPE" ]; then
+    printf "-" > "$NNN_PIPE"
+fi

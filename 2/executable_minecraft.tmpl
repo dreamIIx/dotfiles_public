@@ -1,0 +1,5 @@
+#!/bin/bash
+#__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia __GL_THREADED_OPTIMIZATIONS=1 __GL_SYNC_TO_VBLANK=0
+# LIBGL_ALWAYS_SOFTWARE=1 __GLX_VENDOR_LIBRARY_NAME=mesa
+# env __GLX_VENDOR_LIBRARY_NAME=mesa __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/50_mesa.json MESA_LOADER_DRIVER_OVERRIDE=zink GALLIUM_DRIVER=zink LIBGL_KOPPER_DRI2=1
+gamemoderun prime-run java -jar {{- .chezmoi.homeDir -}}/2/TLauncher-2.885.jar 

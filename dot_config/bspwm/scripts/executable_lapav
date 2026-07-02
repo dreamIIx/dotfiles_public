@@ -1,0 +1,89 @@
+#!/usr/bin/env sh
+
+hidden() {
+    bspc query -N -n .local.window.hidden \
+        | xargs -r -I{} sh -c 'printf "%s:%s\n" {} "$(xprop -id {} WM_NAME | cut -d\= -f2)"' \
+        | rofi -dmenu -show-icons -window-thumbnail -multi-select -i -p "Show:" \
+        | cut -d':' -f1 \
+        | xargs -r -I{} bspc node {} -g hidden="${1:-on}"
+}
+
+do_all() {
+    if [[ $1 == "on" ]] then
+        selector=".local.window.!hidden"
+        flag_val="on"
+    elif [[ $1 == "off" ]] then
+        selector=".local.window.hidden"
+        flag_val="off"
+    fi
+    windows=$(bspc query -N -n $selector | xargs -r -I{} sh -c 'printf "%s:%s\n" {} "$(xprop -id {} WM_NAME | cut -d\= -f2)"' | cut -d':' -f1)
+    if ((${#windows[@]} != 0)) then
+        for i in $windows; do
+            echo "i=$i"
+            bspc node "$i" -g hidden=$flag_val
+        done
+    fi
+}
+
+hide_except_this() {
+    windows=$(bspc query -N -n ".local.window.!hidden" | xargs -r -I{} sh -c 'printf "%s:%s\n" {} "$(xprop -id {} WM_NAME | cut -d\= -f2)"' | cut -d':' -f1)
+    target=${windows//"$(bspc query -N -d focused -n focused)"/}
+    if ((${#target[@]} != 0)) then
+        for i in $target; do
+            echo "i=$i"
+            bspc node "$i" -g hidden="on"
+        done
+    fi
+}
+
+swap_hidden() {
+    windows_not_hiden=$(bspc query -N -n ".local.window.!hidden" -n ".local.window.!marked" | xargs -r -I{} sh -c 'printf "%s:%s\n" {} "$(xprop -id {} WM_NAME | cut -d\= -f2)"' | cut -d':' -f1)
+    windows_not_hiden_marked=$(bspc query -N -n ".local.window.!hidden" -n ".local.window.marked" | xargs -r -I{} sh -c 'printf "%s:%s\n" {} "$(xprop -id {} WM_NAME | cut -d\= -f2)"' | cut -d':' -f1)
+    windows_hiden=$(bspc query -N -n ".local.window.hidden" | xargs -r -I{} sh -c 'printf "%s:%s\n" {} "$(xprop -id {} WM_NAME | cut -d\= -f2)"' | cut -d':' -f1)
+    if ((${#windows_not_hiden[@]} != 0)) then
+        for i in $windows_not_hiden; do
+            echo "i=$i"
+            bspc node "$i" -g hidden="on"
+        done
+    fi
+    if ((${#windows_not_hiden_marked[@]} != 0)) then
+        for i in $windows_not_hiden_marked; do
+            echo "i=$i"
+            bspc node "$i" -g marked="off"
+        done
+    fi
+    if ((${#windows_hiden[@]} != 0)) then
+        for i in $windows_hiden; do
+            echo "i=$i"
+            bspc node "$i" -g hidden="off"
+        done
+    fi
+}
+
+case "$1" in
+    hide | h)
+        if [ -z "$2" ]; then
+            bspc node -g hidden=on
+        else
+            hidden
+        fi
+        ;;
+    show | s)
+        hidden off
+        ;;
+    show_all | sa)
+        do_all off
+        ;;
+    hide_all | ha)
+        do_all on
+        ;;
+    hide_others | ho)
+        hide_except_this
+        ;;
+    swap_hidden | sh)
+        swap_hidden
+        ;;
+    *)
+        notify-send "Lapav Script Error" "Please pass argument\ns, sa, h, ha, ho, sh"
+        ;;
+esac

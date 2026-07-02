@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# export all_proxy="socks://127.0.0.1:1080"
+# export http_proxy="http://127.0.0.1:1081"
+# export https_proxy="socks://127.0.0.1:1080"
+# export socks_proxy="socks://127.0.0.1:1080"
+
+proxy-ns prime-run mpv --idle --force-window=immediate "$1"
+# proxy-ns prime-run streamlink "$1"

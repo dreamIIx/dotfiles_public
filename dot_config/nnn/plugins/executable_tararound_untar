@@ -1,0 +1,10 @@
+#!/bin/zsh
+
+explanation=$(tar -xf $1 -C "$2/$3.unready" 2>&1)
+if (( $? == 0 ));
+then
+    mv "$2/$3.unready" "$2/$3" >/dev/null 2>&1
+else
+    echo $explanation > "$2/$3.explanation"
+    mv "$2/$3.unready" "$2/$3.bad" >/dev/null 2>&1
+fi

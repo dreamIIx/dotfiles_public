@@ -1,0 +1,42 @@
+#!/bin/zsh
+
+if [[ "$1" == "--help" ]];
+then
+    echo "address|port|uuid|transport|security|encryption|pbk|fp|sni|sid|flow|config_name|mode|xpath|host|alpn|REALITY_FLAG|extra"
+fi
+
+address=$1
+port=$2
+uuid=$3
+transport=$4
+security=$5
+encryption=$6
+pbk=$7
+fp=$8
+sni=$9
+sid=$10
+flow=$11
+config_name=$12
+mode=$13
+xpath=$14
+host=$15
+alpn=$16
+REALITY_FLAG=$17
+echo $18
+echo "----"
+extra=$(echo $18 | jq -cr | jq -cRr @uri)
+echo $extra
+echo "----"
+
+if [[ "$REALITY_FLAG" == "REALITY_FLAG" ]];
+then
+    url="vless://$uuid@$address:$port?type=$transport&security=$security&encryption=$encryption&pbk=$pbk&fp=$fp&sni=$sni&sid=$sid&flow=$flow&mode=$mode&path=$xpath&extra=$extra&host=$host#$config_name"
+echo $url
+else
+    url="vless://$uuid@$address:$port?type=$transport&security=$security&encryption=$encryption&pbk=&fp=$fp&sni=$sni&sid=&flow=$flow&mode=$mode&path=$xpath&extra=$extra&host=$host&alpn=$alpn#$config_name"
+echo $url
+fi
+
+mkdir -p ./generated_urls
+echo $url > ./generated_urls/vless_$config_name.url.txt
+qrencode -s 6 -o ./generated_urls/vless_$config_name.png $url

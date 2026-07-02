@@ -1,0 +1,18 @@
+#!/usr/bin/zsh
+
+selection=${NNN_SEL:-${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.selection}
+
+if [[ -s "$selection" ]]; then
+	arr=("${(@f)$(< $selection | tr '\0' '\n')}")
+	if [[ ! -z $arr ]] then
+		for i in $arr; do
+			objdump --visualize-jumps -M intel -D "$i" | sponge "$i.dasm"
+			# less "$i.dasm"
+		done
+	fi
+fi
+
+# Clear selection
+if [ -p "$NNN_PIPE" ]; then
+    printf "-" > "$NNN_PIPE"
+fi

@@ -1,0 +1,21 @@
+export XDG_CONFIG_HOME=$HOME/.config
+
+xrandr --setprovideroutputsource modesetting NVIDIA-0
+xrandr --auto
+
+# export DRI_PRIME=1
+export LIBVA_DRIVER_NAME=nvidia
+# export VDPAU_DRIVER_NAME=nvidia
+
+picom --fade-in-step=1 --fade-out-step=1 -f --config ~/.config/picom/picom.conf & # Запуск picom
+wal -R &
+greenclip daemon &
+xsetroot -cursor_name left_ptr                  # Установка стандартного курсора
+xset s 900 1200
+xrdb -merge ~/.Xresources
+fcitx5 -d &
+# xss-lock -n /usr/share/doc/xss-lock/dim-screen.sh -- ~/1/lock.sh -n &
+xss-lock -- ~/1/lock.sh &
+# exec sxhkd &
+# zeal
+exec dbus-launch --exit-with-session bspwm                                      # Запуск bspwm

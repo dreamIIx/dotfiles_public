@@ -1,0 +1,5 @@
+#!/bin/zsh
+cd $1
+name=$1:t:r
+zip -q -r "../$name.zip" "./" >/dev/null 2>&1
+cd -

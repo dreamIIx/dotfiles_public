@@ -1,0 +1,29 @@
+#!/usr/bin/zsh
+
+selection=${NNN_SEL:-${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.selection}
+
+if [[ -s "$selection" ]]; then
+    arr=("${(@f)$(< $selection | tr '\0' '\n')}")
+    if [[ ! -z $arr ]] then
+        for i in $arr; do
+            ext=$i:t:e
+            head=$i:h
+            name=$i:t:r
+            echo $ext
+            echo $head
+            echo $name
+            if [[ "$ext" == "zip" ]] then
+                ~/.config/nnn/plugins/ziparound_unzip $i $head $name &
+            elif [[ -f "$i" ]] then
+                ~/.config/nnn/plugins/ziparound_zipfile $i &
+            elif [[ -d "$i" ]] then
+                ~/.config/nnn/plugins/ziparound_zipdir $i &
+            fi
+        done
+    fi
+fi
+
+# Clear selection
+if [ -p "$NNN_PIPE" ]; then
+    printf "-" > "$NNN_PIPE"
+fi

@@ -1,0 +1,19 @@
+#!/bin/zsh
+
+data_file="./vless_data_file"
+extra_file="./vless_extra_file"
+if [[ $# -gt 0 ]];
+then
+    data_file=$1
+fi
+if [[ $# -gt 1 ]];
+then
+    extra_file=$2
+fi
+echo "data_file=$data_file"
+echo "extra_file=$extra_file"
+
+extra=$(< $extra_file | jq -cr)
+all="$(< $data_file ) $extra"
+args=(${(@s: :)all})
+./vless_gen_url $args

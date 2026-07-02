@@ -1,0 +1,3 @@
+#!/bin/bash
+rfkill unblock wlan
+sudo create_ap --ieee80211ax --no-virt wlan0 enp3s0 hello_world $1

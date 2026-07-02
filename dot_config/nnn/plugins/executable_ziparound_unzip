@@ -1,0 +1,12 @@
+#!/bin/zsh
+
+err_text=$(unzip -q $1 -d "$2/$3.unready" 2>&1)
+err_code=$?
+
+if [[ $err_code -ne 0 ]];
+then
+    mv "$2/$3.unready" "$2/$3.bad" >/dev/null 2>&1
+    echo $err_text > "$2/$3.bad_expl"
+else
+    mv "$2/$3.unready" "$2/$3" >/dev/null 2>&1
+fi
