@@ -10,13 +10,15 @@
 # Shell: POSIX compliant
 # Author: Benawi Adha
 
+# Modified by: dream11x
+
 sel=${NNN_SEL:-${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.selection}
 
 # Choose one of these two schemes by commenting
 
 # more verbose
 # xargs -0 -I % rsync -ah --progress % "$PWD" < "$sel"
-xargs -0 -P4 -I % rsync -chaz % "$PWD" < "$sel"
+cat "$sel" | sed -E -z "s|^$HOME/\.config/nnn/mounts/([^/]+)/?(.*)|\1:\2|g" | xargs -0 -I % rsync -haz % "$PWD"
 
 # less verbose
 # xargs -0 -I % rsync -ah --info=progress2 % "$PWD" < "$sel"

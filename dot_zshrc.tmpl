@@ -29,7 +29,7 @@ source "${ZINIT_HOME}/zinit.zsh"
 export NNN_PLUG='f:fzcd;d:diffs;D:disasm;z:ziparound;Z:tararound;h:-spawntermhere;p:-preview-tui;c:-.cbcp;g:-dragdrop;m:nmount;b:!cp -rv "$nnn" "$nnn".bak*;i:!convert "$nnn" png:- | xclip -sel clipboard -t image/png*;l:-!less -iR "$nnn"*;e:-!sudo -e "$nnn"*;r:rsynccp'
 # export NB={{- .chezmoi.homeDir -}}/1/nnn_filepicker_buffer
 export NB=${NNN_SEL:-${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.selection}
-export NNN_BMS="d:~/Downloads/;/:/;m:/mnt;D:~/Documents/;w:/run/media/dreamIIx/Windows/;s:/run/media/dreamIIx/dream11x/;S:/run/media/dreamIIx/Shared_drive/;b:/run/media/dreamIIx/dream11x/books"
+export NNN_BMS="d:~/Downloads/;/:/;m:/mnt;D:~/Documents/;w:/run/media/dreamIIx/Windows/;s:/run/media/dreamIIx/dream11x/;S:/run/media/dreamIIx/Shared_drive/;b:/run/media/dreamIIx/dream11x/books;M:{{- .chezmoi.homeDir -}}/.config/nnn/mounts"
 
 [ -n "$NNNLVL" ] && PS1="N$NNNLVL $PS1"
 
