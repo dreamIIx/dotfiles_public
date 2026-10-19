@@ -150,13 +150,13 @@ Print
 	flameshot full --raw | xclip -selection clipboard -target image/png
 
 super + Print
-	mkdir -p /tmp/screenshots/ && flameshot full --path /tmp/screenshots/
+	mkdir -p ~/Documents/screenshots/ && flameshot full --path ~/Documents/screenshots/
 
 ctrl + Print
 	flameshot gui --raw | xclip -selection clipboard -target image/png
 
 super + ctrl + Print
-	mkdir -p /tmp/screenshots/ && flameshot gui --path /tmp/screenshots/
+	mkdir -p ~/Documents/screenshots/ && flameshot gui --path ~/Documents/screenshots/
 
 super + alt + l
 	loginctl lock-session

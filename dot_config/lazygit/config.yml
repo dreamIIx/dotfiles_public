@@ -188,21 +188,21 @@ gui:
   switchTabsWithPanelJumpKeys: false
 # Config relating to git
 git:
+  mergetool:
+    cmd: "nvim -f -c \"Gvdiffsplit!\" \"$MERGED\""
   localBranchSortOrder: recency
   autoForwardBranches: none
   # See https://github.com/jesseduffield/lazygit/blob/master/docs/Custom_Pagers.md
-  pagers:
+  diffRenderers:
     - # Value of the --color arg in the git diff command. Some pagers want this to be set to 'always' and some want it set to 'never'
       colorArg: always
       # e.g.
       # diff-so-fancy
       # delta --dark --paging=never
       # ydiff -p cat -s --wrap --width={{columnWidth}}
-      pager: "delta --dark --paging=never"
+      command: "delta --dark --paging=never"
       # If true, Lazygit will use whatever pager is specified in `$GIT_PAGER`, `$PAGER`, or your *git config*. If the pager ends with something like ` | less` we will strip that part out, because less doesn't play nice with our rendering approach. If the custom pager uses less under the hood, that will also break rendering (hence the `--paging=never` flag for the `delta` pager).
       useConfig: false
-      # e.g. 'difft --color=always'
-      externalDiffCommand: ""
   # Config relating to committing
   commit:
     # If true, pass '--signoff' flag when committing
@@ -306,7 +306,7 @@ os:
   openDirInEditor: ""
   # A built-in preset that sets all of the above settings. Supported presets
   # are defined in the getPreset function in editor_presets.go.
-  editPreset: ""
+  editPreset: "nvim"
   # Command for opening a file, as if the file is double-clicked. Should
   # contain "{{filename}}", but doesn't support "{{line}}".
   open: ""
@@ -378,8 +378,7 @@ keybinding:
     nextMatch: "n"
     prevMatch: "N"
     startSearch: /
-    optionMenu: <disabled>
-    optionMenu-alt1: '?'
+    optionMenu: '?'
     select: <space>
     goInto: <enter>
     confirm: <enter>
@@ -421,6 +420,7 @@ keybinding:
     increaseRenameSimilarityThreshold: )
     decreaseRenameSimilarityThreshold: (
     openDiffTool: <c-t>
+    newWorktree: w
   status:
     checkForUpdate: u
     recentRepos: <enter>
@@ -461,8 +461,6 @@ keybinding:
     setUpstream: u
     fetchRemote: f
     sortOrder: s
-  worktrees:
-    viewWorktreeOptions: w
   commits:
     squashDown: s
     renameCommit: r

@@ -1,7 +1,0 @@
-#!/bin/bash
-for f in *.mp3;
-do
-echo "Processing $f"
-ffmpeg -i "$f" -resampler soxr -b:a 320k -ar 44100 -vn "./output/${f%.mp3}-320.mp3"
-#ffmpeg -i "$f" -resampler soxr -b:a 320k -ar 44100 -vn "${f%.mp4}.mp3"
-done

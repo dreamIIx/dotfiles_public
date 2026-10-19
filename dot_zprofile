@@ -10,7 +10,9 @@ export TERM=xterm-kitty
 export COLORTERM=truecolor
 export TERMINFO=/usr/lib/kitty/terminfo
 
+export WINEPREFIX=~/.wine
+
 if [[ ! -v EMACS_KEES ]]; then
-    emacs --daemon
+    # emacs --daemon
     export EMACS_KEES=1
 fi

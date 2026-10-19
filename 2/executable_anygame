@@ -1,0 +1,3 @@
+#!/usr/bin/zsh
+
+DXVK_FILTER_DEVICE_NAME="NVIDIA" VKD3D_FILTER_DEVICE_NAME="NVIDIA" MANGOHUD=1 MANGOHUD_CONFIG=gamemode mangohud gamemoderun prime-run wine $1

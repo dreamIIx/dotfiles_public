@@ -7,4 +7,5 @@
 
 SVPManager &
 sleep 3s;
-proxy-ns prime-run mpv --idle --force-window=immediate -profile=svp "$1"
+# proxy-ns prime-run mpv --idle --force-window=immediate -profile=svp "$1"
+proxy-ns prime-run mpv --idle -profile=svp "$1"

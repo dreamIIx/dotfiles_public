@@ -15,60 +15,73 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-  spec = {
-    -- add LazyVim and import its plugins
-    { "LazyVim/LazyVim", import = "lazyvim.plugins" },
-    { import = "lazyvim.plugins.extras.lang.json" },
-    -- import/override with your plugins
-    { import = "plugins" },
-    { "Mofiqul/vscode.nvim" },
-    { "akinsho/toggleterm.nvim", version = "*", config = true },
-    {
-        "saghen/blink.cmp",
-        keymap = {
-            preset = "default",
-            ["<CR>"] = {},
-        },
-    },
-    {
-      "kdheepak/lazygit.nvim",
-      -- optional for floating window border decoration
-      requires = {
-        "nvim-lua/plenary.nvim",
-      },
-    },
-    {
-        "mg979/vim-visual-multi"
-	},
-	{
-		'rmagatti/auto-session',
-		lazy = false,
+	spec = {
+		-- add LazyVim and import its plugins
+		{ "LazyVim/LazyVim", import = "lazyvim.plugins" },
+		{ import = "lazyvim.plugins.extras.lang.json" },
+		-- import/override with your plugins
+		{ import = "plugins" },
+		{ "Mofiqul/vscode.nvim" },
+		{ "akinsho/toggleterm.nvim", version = "*", config = true },
+		{
+			"saghen/blink.cmp",
+			keymap = {
+				preset = "default",
+				["<CR>"] = {},
+			},
+		},
+		{
+			"kdheepak/lazygit.nvim",
+			-- optional for floating window border decoration
+			requires = {
+				"nvim-lua/plenary.nvim",
+			},
+		},
+		{
+			"mg979/vim-visual-multi"
+		},
+		{
+			'rmagatti/auto-session',
+			lazy = false,
 
-		---enables autocomplete for opts
-		---@module "auto-session"
-		---@type AutoSession.Config
-		opts = {
-			suppressed_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
-			-- log_level = 'debug',
+			---enables autocomplete for opts
+			---@module "auto-session"
+			---@type AutoSession.Config
+			opts = {
+				suppressed_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
+				-- log_level = 'debug',
+			}
+		},
+		{
+			'mikesmithgh/kitty-scrollback.nvim',
+			enabled = true,
+			lazy = true,
+			cmd = { 'KittyScrollbackGenerateKittens', 'KittyScrollbackCheckHealth', 'KittyScrollbackGenerateCommandLineEditing' },
+			event = { 'User KittyScrollbackLaunch' },
+			-- version = '*', -- latest stable version, may have breaking changes if major version changed
+			-- version = '^6.0.0', -- pin major version, include fixes and features that do not have breaking changes
+			config = function()
+				require('kitty-scrollback').setup()
+			end,
+		},
+		{
+			'HiPhish/rainbow-delimiters.nvim'
+		},
+		{
+			'tpope/vim-fugitive',
+			lazy = false,
+			config = function()
+				vim.api.nvim_create_autocmd("User", {
+					pattern = "FugitiveIndex",
+					callback = function()
+					end,
+				})
+				vim.keymap.set('n', 'gl', ':diffget //2<CR>', { desc = 'Merge: Take Left (Ours)' })
+				vim.keymap.set('n', 'gr', ':diffget //3<CR>', { desc = 'Merge: Take Right (Theirs)' })
+			end
 		}
 	},
-	{
-		'mikesmithgh/kitty-scrollback.nvim',
-		enabled = true,
-		lazy = true,
-		cmd = { 'KittyScrollbackGenerateKittens', 'KittyScrollbackCheckHealth', 'KittyScrollbackGenerateCommandLineEditing' },
-		event = { 'User KittyScrollbackLaunch' },
-		-- version = '*', -- latest stable version, may have breaking changes if major version changed
-		-- version = '^6.0.0', -- pin major version, include fixes and features that do not have breaking changes
-		config = function()
-			require('kitty-scrollback').setup()
-		end,
-	},
-  {
-    'HiPhish/rainbow-delimiters.nvim'
-  }
-  },
-  defaults = {
+	defaults = {
     -- By default, only LazyVim plugins will be lazy-loaded. Your custom plugins will load during startup.
     -- If you know what you're doing, you can set this to `true` to have all your custom plugins lazy-loaded by default.
     lazy = false,
@@ -270,9 +283,13 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 require('neo-tree').setup {
 	filesystem = {
 		filtered_items = {
-			visible = true, -- This is what you want: If you set this to `true`, all "hide" just mean "dimmed out"
+			visible = true,
 			hide_dotfiles = false,
 			hide_gitignored = true,
+		},
+		follow_current_file = {
+			enabled = true, 
+			leave_dirs_open = true,
 		},
 	}
 }

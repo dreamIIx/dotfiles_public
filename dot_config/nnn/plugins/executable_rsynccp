@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/bash
 
 # Description: Simple script to give copy-paste a progress percentage
 #              by utilizing rsync.
@@ -12,14 +12,45 @@
 
 # Modified by: dream11x
 
+MOUNT_BASE="$HOME/.config/nnn/mounts"
+
 sel=${NNN_SEL:-${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.selection}
+
+[ -s "$sel" ] || exit 0
+
+# num_items=$(grep -zc '^' "$sel")
 
 # Choose one of these two schemes by commenting
 
 # more verbose
 # xargs -0 -I % rsync -ah --progress % "$PWD" < "$sel"
-cat "$sel" | sed -E -z "s|^$HOME/\.config/nnn/mounts/([^/]+)/?(.*)|\1:\2|g" | xargs -0 -I % rsync -haz % "$PWD"
+if [[ "$PWD" =~ ^"$MOUNT_BASE" ]]; then
+    
+    # ==========================================
+    # PUSH MODE: Local Files -> Remote Destination ($PWD)
+    # ==========================================
+    REMOTE_HOST=$(echo "$PWD" | sed -E "s|^$MOUNT_BASE/([^/]+).*|\1|")
+    REMOTE_DST=$(echo "$PWD" | sed -E "s|^$MOUNT_BASE/[^/]+/?(.*)|\1|")
+	# if [ "$num_items" -eq 1 ]; then
+	cat "$sel" | xargs -0 -P3 -I % rsync -havz % "$REMOTE_HOST:$REMOTE_DST/"
+	# cat "$sel" | sed -E -z "s|^$MOUNT_BASE/([^/]+)/?(.*)|\1:\2|g" | xargs -0 -P3 -I % rsync -havz % "$REMOTE_HOST:$REMOTE_DST/"
+	# else
+	# 	cat "$sel" | parallel -0 -j3 --bar rsync -az {} "$REMOTE_HOST:$REMOTE_DST/"
+	# fi
 
+else
+    
+    # ==========================================
+    # PULL MODE: Remote Selections -> Local Destination ($PWD)
+    # ==========================================
+	# if [ "$num_items" -eq 1 ]; then
+	cat "$sel" | sed -E -z "s|^$MOUNT_BASE/([^/]+)/?(.*)|\1:\2|g" | xargs -0 -P3 -I % rsync -havz % "$PWD"
+	# DEST=$(echo "$PWD" | sed -E "s|^$MOUNT_BASE/([^/]+)/?(.*)|\1:\2|")
+	# cat "$sel" | sed -E -z "s|^$MOUNT_BASE/([^/]+)/?(.*)|\1:\2|g" | xargs -0 -P3 -I % rsync -havz % "$DEST"
+	# else
+	# 	cat "$sel" | sed -E -z "s|^$MOUNT_BASE/([^/]+)/?(.*)|\1:\2|g" | parallel -0 -j3 --bar rsync -az {} "$PWD"
+	# fi
+fi
 # less verbose
 # xargs -0 -I % rsync -ah --info=progress2 % "$PWD" < "$sel"
 
